@@ -1,34 +1,79 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hari DevOps Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hari DevOps Platform</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #101827;
             color: white;
             text-align: center;
-            padding: 80px 20px;
+            padding: 60px 20px;
+            margin: 0;
         }
+
         .card {
             background: #1e293b;
             padding: 35px;
             border-radius: 15px;
-            display: inline-block;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
+
         h1 {
             color: #38bdf8;
         }
+
+        h2 {
+            color: #86efac;
+        }
+
+        p {
+            line-height: 1.7;
+        }
+
+        .version {
+            margin-top: 25px;
+            padding: 12px;
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            color: #38bdf8;
+        }
+
+        .status {
+            color: #86efac;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
     <div class="card">
         <h1>Hari DevOps Platform</h1>
+
         <h2>Application Deployed Successfully!</h2>
+
         <p>Infrastructure: AWS EC2</p>
         <p>Containerization: Docker</p>
         <p>Web Server: Nginx</p>
-        <p>Next: GitHub + CI/CD Pipeline</p>
+        <p>Source Code: GitHub</p>
+        <p>CI Pipeline: GitHub Actions</p>
+
+        <p class="status">Application Status: Running</p>
+
+        <p class="version">
+            Version: v2 - Automated Deployment Test
+        </p>
     </div>
 </body>
 </html>
+```
