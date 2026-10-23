@@ -1,4 +1,4 @@
-name: Hari DevOps CI Pipeline
+name: Hari DevOps CI/CD
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,8 +17,29 @@ jobs:
         run: |
           test -f index.html
           test -f Dockerfile
-          echo "Application files verified"
 
       - name: Build Docker image
+        run: docker build -t hari-devops-platform:${{ github.sha }} .
+
+      - name: Configure SSH
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          docker build -t hari-devops-platform:${{ github.sha }} .
+          mkdir -p ~/.ssh
+          printf '%s\n' "$EC2_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=accept-new \
+            "$EC2_USER@$EC2_HOST" \
+            'cd ~/devops-project && git pull origin main && sudo docker build -t hari-devops-platform:latest . && sudo docker rm -f devops-web || true'
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=accept-new \
+            "$EC2_USER@$EC2_HOST" \
+            'sudo docker run -d --name devops-web --restart unless-stopped -p 8080:80 hari-devops-platform:latest'
